@@ -1,16 +1,31 @@
 import { StatusBar } from 'expo-status-bar';
+import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import axios from 'axios';
 import { getPokemons } from './controllers/pokemonControllers';
 
 
 export default function App() {
+  const [allPokemons, setAllPokemons] = useState([])
 
-  getPokemons()
+  const getAllPokemons = async () => {
+    let a = await getPokemons(151, 0)
+    setAllPokemons(a)
+    console.log(allPokemons[0]);
+  }
+
+  useEffect(() => {
+    getAllPokemons()
+  }, [])
 
   return (
     <View style={styles.container}>
-      <Text>Hello pokedex!</Text>
+      <View>
+        {allPokemons.map((pokemon: any, i: any) => {
+          return (
+            <Text key={i}>{pokemon.name}</Text>
+          )
+        })}
+      </View>
       <StatusBar style="auto" />
     </View>
   );
