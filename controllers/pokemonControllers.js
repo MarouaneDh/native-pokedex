@@ -1,14 +1,16 @@
 import axios from 'axios';
 
-export const getPokemon = (url) => {
-    axios
-      .get(url)
-      .then((res) => {
-        console.log('===========res===========')
-        console.log(res.data)
+export const getPokemon = async (name) => {
+    try {
+      await axios.get(`https://pokeapi.co/api/v2/pokemon/${name}`).then((res) => {
+        console.log('===============')
+        console.log(res)
+        return res
+      })
+      
+      } catch (error) {
+        console.log(error)
       }
-      )
-      .catch((err) => console.log(err));
 };
   
 export const getPokemons = async (limit,offset) =>  {
