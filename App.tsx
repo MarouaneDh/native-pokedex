@@ -49,8 +49,7 @@ const styles = StyleSheet.create({
   },
   pokemonContainer: {
     flex: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-around'
+    justifyContent: 'space-around',
+    width: "100%",
   }
 });
