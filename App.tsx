@@ -1,7 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { getPokemons } from './controllers/pokemonControllers';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import OnePokemonBloc from './components/OnePokemeonBloc';
+import { getPokemons,getPokemon } from './controllers/pokemonControllers';
 
 
 export default function App() {
@@ -10,7 +11,6 @@ export default function App() {
   const getAllPokemons = async () => {
     let a = await getPokemons(151, 0)
     setAllPokemons(a)
-    console.log(allPokemons[0]);
   }
 
   useEffect(() => {
@@ -18,16 +18,19 @@ export default function App() {
   }, [])
 
   return (
-    <View style={styles.container}>
-      <View>
-        {allPokemons.map((pokemon: any, i: any) => {
-          return (
-            <Text key={i}>{pokemon.name}</Text>
-          )
-        })}
-      </View>
+    <ScrollView>
+      <View style={styles.container}>
+        <View style={styles.pokemondContainer}>
+          {allPokemons.map((pokemon: any, i: any) => {
+            return (
+              <OnePokemonBloc name={pokemon.name} key={i}/>
+              // <Text key={i}>hello</Text>
+            )
+          })}
+        </View>
       <StatusBar style="auto" />
     </View>
+    </ScrollView>
   );
 }
 
@@ -37,5 +40,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+    padding:30
   },
+  pokemondContainer: {
+    flex:1,
+    flexDirection:'row',
+    flexWrap: 'wrap',
+    justifyContent:'space-between'
+  }
 });

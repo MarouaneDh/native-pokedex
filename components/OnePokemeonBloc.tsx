@@ -1,16 +1,26 @@
 import { StatusBar } from 'expo-status-bar';
+import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { getPokemon } from '../controllers/pokemonControllers';
 
 
-export default function OnePokemonBloc(url: any) {
+export default function OnePokemonBloc(name: any) {
+    const [pokemon, setPokemon] = useState([])
 
-    getPokemon(url)
+    // getPokemon(url)
+
+    const getThisPokemon = async () => {
+        let a = await getPokemon(name)
+        setPokemon(a)
+      }
+
+      useEffect(() => {
+        getThisPokemon()
+      }, [])
 
     return (
         <View style={styles.container}>
-            <Text>Hello pokedex!</Text>
-            <StatusBar style="auto" />
+            <Text>hello</Text>
         </View>
     );
 }
