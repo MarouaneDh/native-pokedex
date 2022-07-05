@@ -1,15 +1,4 @@
 import axios from 'axios';
-
-export const getPokemon = async (name) => {
-    try {
-      await axios.get(`https://pokeapi.co/api/v2/pokemon/${name}`).then((res) => {
-        return res.data
-      })
-      
-      } catch (error) {
-        console.log(error)
-      }
-};
   
 export const getPokemons = async (limit,offset) =>  {
       try {
