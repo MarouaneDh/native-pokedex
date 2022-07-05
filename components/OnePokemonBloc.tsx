@@ -24,7 +24,7 @@ export default function OnePokemonBloc(pokemon: any) {
             {
                 pokemon ?
                     <View>
-                        <Text>{pokemon.pokemon.name}</Text>
+                        <Text>{thisPokemon.id}</Text>
                     </View> :
                     <Text>hello one bloc</Text>
             }
