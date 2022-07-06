@@ -7,6 +7,7 @@ import { getPokemon } from '../controllers/pokemonControllers';
 
 export default function OnePokemonBloc(pokemon) {
     const [thisPokemon, setThisPokemon] = useState([])
+    const [loading, setLoading] = useState(true)
 
     const getThisPokemon = async () => {
         try {
@@ -29,15 +30,14 @@ export default function OnePokemonBloc(pokemon) {
 
 
     getThisPokemon()
-
-    let pic = thisPokemon?.sprites?.front_default
-
-    // console.log(pic);
+    setTimeout(() => {
+        setLoading(false)
+    }, 2500);
 
     return (
         <View style={styles.pokeCard}>
             {
-                pokemon ?
+                loading === false ?
                     <View style={styles.pokeCardIn}>
                         <Image
                             style={styles.pic}
@@ -48,7 +48,14 @@ export default function OnePokemonBloc(pokemon) {
                         <Text style={styles.number}>#{thisPokemon.id}</Text>
                         <Text style={styles.name}>{thisPokemon?.name?.charAt(0).toUpperCase() + thisPokemon?.name?.slice(1)}</Text>
                     </View> :
-                    <Text>hello one bloc</Text>
+                    <View style={styles.gifContainer}>
+                        <Image
+                            style={styles.gif}
+                            source={{
+                                uri: `https://c.tenor.com/fSsxftCb8w0AAAAi/pikachu-running.gif`,
+                            }}
+                        />
+                    </View>
             }
         </View>
     );
@@ -73,10 +80,21 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         position: 'relative',
     },
+    gifContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
     pic: {
         width: 100,
         height: 100,
         position: "absolute",
+        right: 10
+    },
+    gif: {
+        width: 70,
+        height: 50,
         right: 10
     },
     number: {
