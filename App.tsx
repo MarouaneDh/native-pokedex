@@ -1,55 +1,17 @@
-import { StatusBar } from 'expo-status-bar';
-import { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import OnePokemonBloc from './components/OnePokemonBloc';
-import { getPokemons } from './controllers/pokemonControllers';
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import HomeScreen from './screens/HomeScreen'
 
+const Stack = createStackNavigator();
 
 export default function App() {
-  const [allPokemons, setAllPokemons] = useState([])
-
-  const getAllPokemons = async () => {
-    let a = await getPokemons(151, 0)
-    setAllPokemons(a)
-  }
-
-  useEffect(() => {
-    getAllPokemons()
-  }, [])
 
   return (
-    <ScrollView>
-      {
-        allPokemons ?
-          <View style={styles.container}>
-            <View style={styles.pokemonContainer}>
-              {allPokemons.map((pokemon: any, i: any) => {
-                return (
-                  // <Text key={i}>{pokemon.name}</Text>
-                  <OnePokemonBloc key={i} pokemon={pokemon} />
-                )
-              })}
-            </View>
-            <StatusBar style="auto" />
-          </View> :
-          <Text>Hello app</Text>
-      }
-    </ScrollView>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Kanto Region" component={HomeScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 30,
-    paddingTop: 50
-  },
-  pokemonContainer: {
-    flex: 1,
-    justifyContent: 'space-around',
-    width: "100%",
-  }
-});

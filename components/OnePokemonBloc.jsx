@@ -44,6 +44,78 @@ export default function OnePokemonBloc(pokemon) {
                 paddingHorizontal: 10,
             }
         }
+        if (type === 'ice') {
+            return {
+                margin: 10,
+                backgroundColor: '#48d1cc',
+                borderRadius: 15,
+                paddingHorizontal: 10,
+            }
+        }
+        if (type === 'fighting') {
+            return {
+                margin: 10,
+                backgroundColor: '#8b0000',
+                borderRadius: 15,
+                paddingHorizontal: 10,
+            }
+        }
+        if (type === 'ground') {
+            return {
+                margin: 10,
+                backgroundColor: '#bdb76b',
+                borderRadius: 15,
+                paddingHorizontal: 10,
+            }
+        }
+        if (type === 'psychic') {
+            return {
+                margin: 10,
+                backgroundColor: '#ff1493',
+                borderRadius: 15,
+                paddingHorizontal: 10,
+            }
+        }
+        if (type === 'rock') {
+            return {
+                margin: 10,
+                backgroundColor: '#daa520',
+                borderRadius: 15,
+                paddingHorizontal: 10,
+            }
+        }
+        if (type === 'ghost') {
+            return {
+                margin: 10,
+                backgroundColor: '#4b0082',
+                borderRadius: 15,
+                paddingHorizontal: 10,
+            }
+        }
+        if (type === 'dark') {
+            return {
+                margin: 10,
+                backgroundColor: '#010500',
+                borderRadius: 15,
+                paddingHorizontal: 10,
+            }
+        }
+        if (type === 'dragon') {
+            return {
+                margin: 10,
+                backgroundColor: '#000080',
+                borderRadius: 15,
+                paddingHorizontal: 10,
+            }
+        }
+        if (type === 'steel') {
+            return {
+                margin: 10,
+                backgroundColor: '#a9a9a9',
+                borderRadius: 15,
+                paddingHorizontal: 10,
+            }
+        }
         if (type === 'water') {
             return {
                 margin: 10,
@@ -102,7 +174,7 @@ export default function OnePokemonBloc(pokemon) {
         } else {
             return {
                 margin: 10,
-                backgroundColor: 'red',
+                backgroundColor: '#ffb6c1',
                 borderRadius: 15,
                 paddingHorizontal: 10,
             }
@@ -154,29 +226,23 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         paddingHorizontal: 10,
     },
-    grass: {
-        margin: 10,
-        backgroundColor: 'green',
-        borderRadius: 15,
-        paddingHorizontal: 10,
-    },
     pokeCardIn: {
         flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
         position: 'relative',
     },
-    gifContainer: {
-        flex: 1,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
     pic: {
         width: 100,
         height: 100,
         position: "absolute",
         right: 10
+    },
+    gifContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     gif: {
         width: 70,
