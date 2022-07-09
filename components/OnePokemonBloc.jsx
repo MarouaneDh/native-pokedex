@@ -17,6 +17,7 @@ export default function OnePokemonBloc(pokemon) {
                     await axios.get(res.data.forms[0].url).then((res) => {
                         setThisPokemon(res.data)
                         setType(res.data?.types[0]?.type?.name)
+                        setLoading(false)
                     })
 
                 } catch (error) {
@@ -31,9 +32,6 @@ export default function OnePokemonBloc(pokemon) {
 
 
     getThisPokemon()
-    setTimeout(() => {
-        setLoading(false)
-    }, 3000);
 
     const myStyle = () => {
         if (type === 'grass') {
