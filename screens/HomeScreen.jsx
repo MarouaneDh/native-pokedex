@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
-import { Button, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Button, ScrollView, StyleSheet, Text, View } from 'react-native';
 import OnePokemonBloc from '../components/OnePokemonBloc';
 import { getPokemons } from '../controllers/pokemonControllers';
 
@@ -10,7 +10,7 @@ export default function App() {
   const [offset, setOffset] = useState(0)
 
   const getAllPokemons = async () => {
-    let a = await getPokemons(9, offset)
+    let a = await getPokemons(151, 0)
     setAllPokemons(a)
   }
 
@@ -26,8 +26,20 @@ export default function App() {
 
   useEffect(() => {
     getAllPokemons()
-    console.log(offset);
   }, [offset])
+
+  // const displayThesePokemons = () => {
+  //   let tab = []
+  //   for (let i=offset; i<offset+9;i++){
+  //     tab.push(allPokemons[i])
+  //   }
+  //   return (
+  //       tab.map((poke,i)=>{
+  //         <OnePokemonBloc key={i} pokemon={poke} />
+  //       })
+      
+  //   )
+  // }
 
   return (
     <ScrollView>
@@ -40,14 +52,17 @@ export default function App() {
                   <OnePokemonBloc key={i} pokemon={pokemon} />
                 )
               })}
+              {/* {
+                displayThesePokemons()
+              } */}
             </View>
-            <StatusBar style="auto" />
             <View style={styles.pagination}>
                 {
                   offset!==0?
                   <Button onPress={()=>prevPage()} title='back'/>:
                   <Button onPress={()=>prevPage()} disabled title='back'/>
                 }
+                <Text>{(offset/9)+1}</Text>
                 <Button onPress={()=>nextPage()} title='next'/>
             </View>
           </View> :
@@ -75,6 +90,7 @@ const styles = StyleSheet.create({
     flex:1,
     flexDirection: 'row',
     justifyContent: 'space-around',
-    width:'100%'
+    width:'100%',
+    alignItems: 'center'
   }
 });

@@ -12,7 +12,7 @@ export default function OnePokemonBloc(pokemon) {
 
     const getThisPokemon = async () => {
         try {
-            await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemon.pokemon.name}`).then(async (res) => {
+            await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemon?.pokemon?.name}`).then(async (res) => {
                 try {
                     await axios.get(res.data.forms[0].url).then((res) => {
                         setThisPokemon(res.data)
@@ -193,8 +193,17 @@ export default function OnePokemonBloc(pokemon) {
                                             uri: `${thisPokemon?.sprites?.front_default}`,
                                         }}
                                     />
-                                    <Text style={styles.number}>#{thisPokemon.id}</Text>
-                                    <Text style={styles.name}>{thisPokemon?.name?.charAt(0).toUpperCase() + thisPokemon?.name?.slice(1)}</Text>
+                                    {
+                                        type==='grass' || type==='poison' || type==='fighting' || type==='ghost' || type==='dragon'?
+                                        <View style={styles.tag}>
+                                            <Text style={styles.numberWhite}>#{thisPokemon.id}</Text>
+                                            <Text style={styles.nameWhite}>{thisPokemon?.name?.charAt(0).toUpperCase() + thisPokemon?.name?.slice(1)}</Text>
+                                        </View>:
+                                        <View style={styles.tag}>
+                                            <Text style={styles.number}>#{thisPokemon.id}</Text>
+                                            <Text style={styles.name}>{thisPokemon?.name?.charAt(0).toUpperCase() + thisPokemon?.name?.slice(1)}</Text>
+                                        </View>
+                                    }
                                 </View> :
                                 <View style={styles.gifContainer}>
                                     <Image
@@ -254,5 +263,20 @@ const styles = StyleSheet.create({
     },
     name: {
         fontSize: 15,
+    },
+    numberWhite: {
+        fontWeight: "bold",
+        fontSize: 30,
+        marginRight: 15,
+        color: 'white'
+    },
+    nameWhite: {
+        fontSize: 15,
+        color: 'white'
+    },
+    tag: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center'
     }
 });
