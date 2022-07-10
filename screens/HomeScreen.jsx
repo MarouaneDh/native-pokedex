@@ -1,11 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
-import { Button, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Button, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import OnePokemonBloc from '../components/OnePokemonBloc';
 import { getPokemons } from '../controllers/pokemonControllers';
 
 
-export default function App() {
+export default function HomeScreen({navigation}) {
   const [allPokemons, setAllPokemons] = useState([])
   const [offset, setOffset] = useState(0)
 
@@ -37,7 +37,6 @@ export default function App() {
   //       tab.map((poke,i)=>{
   //         <OnePokemonBloc key={i} pokemon={poke} />
   //       })
-      
   //   )
   // }
 
@@ -49,14 +48,19 @@ export default function App() {
             <View style={styles.pokemonContainer}>
               {allPokemons.map((pokemon, i) => {
                 return (
-                  <OnePokemonBloc key={i} pokemon={pokemon} />
+                  <Pressable key={i}
+                  onPress={() =>
+                    navigation.navigate('Pokemon Details', { pokemon: pokemon })
+                    }>
+                    <OnePokemonBloc pokemon={pokemon} />
+                  </Pressable>
                 )
               })}
               {/* {
                 displayThesePokemons()
               } */}
             </View>
-            <View style={styles.pagination}>
+            {/* <View style={styles.pagination}>
                 {
                   offset!==0?
                   <Button onPress={()=>prevPage()} title='back'/>:
@@ -64,9 +68,9 @@ export default function App() {
                 }
                 <Text>{(offset/9)+1}</Text>
                 <Button onPress={()=>nextPage()} title='next'/>
-            </View>
+            </View> */}
           </View> :
-          <Text>Hello app</Text>
+          <Text>Hello HomeScreen</Text>
       }
     </ScrollView>
   );

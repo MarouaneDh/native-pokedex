@@ -1,8 +1,6 @@
 import axios from 'axios';
-import { StatusBar } from 'expo-status-bar';
-import { useEffect, useState } from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
-import { getPokemon } from '../controllers/pokemonControllers';
+import { useState } from 'react';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 
 
 export default function OnePokemonBloc(pokemon) {
@@ -186,7 +184,8 @@ export default function OnePokemonBloc(pokemon) {
                     <View style={myStyle()}>
                         {
                             loading === false ?
-                                <View style={styles.pokeCardIn}>
+                                    <View
+                                    style={styles.pokeCardIn}>
                                     <Image
                                         style={styles.pic}
                                         source={{
@@ -204,7 +203,8 @@ export default function OnePokemonBloc(pokemon) {
                                             <Text style={styles.name}>{thisPokemon?.name?.charAt(0).toUpperCase() + thisPokemon?.name?.slice(1)}</Text>
                                         </View>
                                     }
-                                </View> :
+                                    </View>
+                                :
                                 <View style={styles.gifContainer}>
                                     <Image
                                         style={styles.gif}
