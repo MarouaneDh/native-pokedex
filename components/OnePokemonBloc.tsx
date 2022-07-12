@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { useState } from 'react';
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 
 
-export default function OnePokemonBloc(pokemon) {
+export default function OnePokemonBloc(pokemon: { pokemon: { name: any; }; }) {
     const [thisPokemon, setThisPokemon] = useState([])
     const [loading, setLoading] = useState(true)
     const [type, setType] = useState('')
