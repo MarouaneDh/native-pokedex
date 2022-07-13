@@ -1,57 +1,60 @@
-import { StatusBar } from 'expo-status-bar';
-import { useEffect, useState } from 'react';
-import { Button, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import * as React from 'react';
+import { useState } from 'react';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import OnePokemonBloc from '../components/OnePokemonBloc';
 import { getPokemons } from '../controllers/pokemonControllers';
 
 
-export default function HomeScreen({navigation}) {
-  const [allPokemons, setAllPokemons] = useState([])
-  const [offset, setOffset] = useState(0)
+export default class HomeScreen extends React.Component {
 
-  const getAllPokemons = async () => {
+  props: any
+	state: any
+
+  constructor(props: any) {
+    super(props)
+    this.state={
+      loading: true,
+      allPokemons: null
+    }
+  }
+  // const [allPokemons, setAllPokemons] = useState([])
+  // const [offset, setOffset] = useState(0)
+
+  getAllPokemons = async () => {
     let a = await getPokemons(151, 0)
-    setAllPokemons(a)
+    this.setState({allPokemons:a})
   }
 
-  const nextPage = () => {
-    let a = offset
-    setOffset(a+9)
-  }
-
-  const prevPage = () => {
-      let a = offset
-      setOffset(a-9)
-  }
-
-  useEffect(() => {
-    getAllPokemons()
-  }, [offset])
-
-  // const displayThesePokemons = () => {
-  //   let tab = []
-  //   for (let i=offset; i<offset+9;i++){
-  //     tab.push(allPokemons[i])
-  //   }
-  //   return (
-  //       tab.map((poke,i)=>{
-  //         <OnePokemonBloc key={i} pokemon={poke} />
-  //       })
-  //   )
+  // const nextPage = () => {
+  //   let a = offset
+  //   setOffset(a+9)
   // }
 
+  // const prevPage = () => {
+  //     let a = offset
+  //     setOffset(a-9)
+  // }
+
+  componentDidMount(){
+    this.getAllPokemons()
+  }
+
+
+  render(){
   return (
     <ScrollView>
       {
-        allPokemons ?
+        this.state.allPokemons ?
           <View style={styles.container}>
             <View style={styles.pokemonContainer}>
-              {allPokemons.map((pokemon, i) => {
+              {this.state.allPokemons.map((pokemon:any, i:any) => {
                 return (
-                  <Pressable key={i}
+                  <Pressable 
+                  key={i}
                   onPress={() =>
-                    navigation.navigate('Pokemon Details', { pokemon: pokemon })
-                    }>
+                    this.props.navigation.navigate('Pokemon Details', { pokemon: pokemon })
+                    }
+                    >
                     <OnePokemonBloc pokemon={pokemon} />
                   </Pressable>
                 )
@@ -73,9 +76,8 @@ export default function HomeScreen({navigation}) {
           <Text>Hello HomeScreen</Text>
       }
     </ScrollView>
-  );
-}
-
+  )
+}}
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -98,3 +100,4 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   }
 });
+

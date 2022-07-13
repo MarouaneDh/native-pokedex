@@ -2,21 +2,28 @@ import axios from 'axios'
 import React, { useState } from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
 
-const OnePokemonScreen = (props: { route: { params: { pokemon: any } } }) => {
-    let pokemon = props.route.params.pokemon
-    const [thisPokemon, setThisPokemon] = useState([])
-    const [loading, setLoading] = useState(true)
-    const [type, setType] = useState('')
+export default class OnePokemonScreen extends React.Component {
 
-    const getThisPokemon = async () => {
+    props: any
+    state: any
+  
+    constructor(props: any) {
+      super(props)
+      this.state={
+        loading: true,
+        pokemon: null,
+        type: null
+      }
+    }
+    getThisPokemon = async () => {
       try {
-          await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemon?.name}`).then(async (res) => {
+          await axios.get(`https://pokeapi.co/api/v2/pokemon/${this.props.route.params.pokemon.name}`).then(async (res) => {
               try {
                 console.log(res);
                   await axios.get(res.data.forms[0].url).then((res) => {
-                      setThisPokemon(res.data)
-                      setType(res.data?.types[0]?.type?.name)
-                      setLoading(false)
+                      this.setState({pokemon:res.data})
+                      this.setState({type:res.data?.types[0]?.type?.name})
+                      this.setState({loading:false})
                       console.log(res.data);
                   })
 
@@ -30,11 +37,12 @@ const OnePokemonScreen = (props: { route: { params: { pokemon: any } } }) => {
       }
   }
 
-  getThisPokemon()
+  componentDidMount(){
+    this.getThisPokemon()
+    // console.log(this.props.route.params.pokemon.name);
+  }
 
-  console.log(thisPokemon?.sprites);
-
-  const myStyle = () => {
+  myStyle = () => {
     if (type === 'grass') {
         return {
             margin: 10,
@@ -180,19 +188,25 @@ const OnePokemonScreen = (props: { route: { params: { pokemon: any } } }) => {
     }
 }
 
+    render(){
   return (
     <View>
-        <Text>{thisPokemon.name}</Text>
+        {
+            this.state.pokemon?
+            <View>
+                <Text>{this.state.pokemon.name}</Text>
         <Image
             style={styles.pic}
             source={{
-                uri: `${thisPokemon?.sprites?.front_default}`,
+                uri: `${this.state.pokemon?.sprites?.front_default}`,
             }}
         />
+            </View>:null
+        }
     </View>
   )
 }
-
+}
 const styles = StyleSheet.create({
     pic: {
         width: 100,
@@ -201,5 +215,3 @@ const styles = StyleSheet.create({
         right: 10
     },
 });
-
-export default OnePokemonScreen
