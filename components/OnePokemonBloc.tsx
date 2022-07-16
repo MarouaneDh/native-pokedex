@@ -1,21 +1,30 @@
 import axios from 'axios';
-import { useState } from 'react';
+import * as React from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 
 
-export default function OnePokemonBloc(pokemon: { pokemon: { name: any; }; }) {
-    const [thisPokemon, setThisPokemon] = useState([])
-    const [loading, setLoading] = useState(true)
-    const [type, setType] = useState('')
+export default class HomeScreen extends React.Component{
 
-    const getThisPokemon = async () => {
+    props: any
+	state: any
+
+  constructor(props: any) {
+    super(props)
+    this.state={
+      loading: true,
+      thisPokemon: null,
+      type:0
+    }
+  }
+
+    getThisPokemon = async () => {
         try {
-            await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemon?.pokemon?.name}`).then(async (res) => {
+            await axios.get(`https://pokeapi.co/api/v2/pokemon/${this.props.pokemon?.name}`).then(async (res) => {
                 try {
                     await axios.get(res.data.forms[0].url).then((res) => {
-                        setThisPokemon(res.data)
-                        setType(res.data?.types[0]?.type?.name)
-                        setLoading(false)
+                        this.setState({thisPokemon:res.data})
+                        this.setState({type:res.data?.types[0]?.type?.name})
+                        this.setState({loading:false})
                     })
 
                 } catch (error) {
@@ -29,10 +38,12 @@ export default function OnePokemonBloc(pokemon: { pokemon: { name: any; }; }) {
     }
 
 
-    getThisPokemon()
+    componentDidMount(){
+        this.getThisPokemon()
+    }
 
-    const myStyle = () => {
-        if (type === 'grass') {
+    myStyle = () => {
+        if (this.state.type === 'grass') {
             return {
                 margin: 10,
                 backgroundColor: 'green',
@@ -40,7 +51,7 @@ export default function OnePokemonBloc(pokemon: { pokemon: { name: any; }; }) {
                 paddingHorizontal: 10,
             }
         }
-        if (type === 'ice') {
+        if (this.state.type === 'ice') {
             return {
                 margin: 10,
                 backgroundColor: '#48d1cc',
@@ -48,7 +59,7 @@ export default function OnePokemonBloc(pokemon: { pokemon: { name: any; }; }) {
                 paddingHorizontal: 10,
             }
         }
-        if (type === 'fighting') {
+        if (this.state.type === 'fighting') {
             return {
                 margin: 10,
                 backgroundColor: '#8b0000',
@@ -56,7 +67,7 @@ export default function OnePokemonBloc(pokemon: { pokemon: { name: any; }; }) {
                 paddingHorizontal: 10,
             }
         }
-        if (type === 'ground') {
+        if (this.state.type === 'ground') {
             return {
                 margin: 10,
                 backgroundColor: '#bdb76b',
@@ -64,7 +75,7 @@ export default function OnePokemonBloc(pokemon: { pokemon: { name: any; }; }) {
                 paddingHorizontal: 10,
             }
         }
-        if (type === 'psychic') {
+        if (this.state.type === 'psychic') {
             return {
                 margin: 10,
                 backgroundColor: '#ff1493',
@@ -72,7 +83,7 @@ export default function OnePokemonBloc(pokemon: { pokemon: { name: any; }; }) {
                 paddingHorizontal: 10,
             }
         }
-        if (type === 'rock') {
+        if (this.state.type === 'rock') {
             return {
                 margin: 10,
                 backgroundColor: '#daa520',
@@ -80,7 +91,7 @@ export default function OnePokemonBloc(pokemon: { pokemon: { name: any; }; }) {
                 paddingHorizontal: 10,
             }
         }
-        if (type === 'ghost') {
+        if (this.state.type === 'ghost') {
             return {
                 margin: 10,
                 backgroundColor: '#4b0082',
@@ -88,7 +99,7 @@ export default function OnePokemonBloc(pokemon: { pokemon: { name: any; }; }) {
                 paddingHorizontal: 10,
             }
         }
-        if (type === 'dark') {
+        if (this.state.type === 'dark') {
             return {
                 margin: 10,
                 backgroundColor: '#010500',
@@ -96,7 +107,7 @@ export default function OnePokemonBloc(pokemon: { pokemon: { name: any; }; }) {
                 paddingHorizontal: 10,
             }
         }
-        if (type === 'dragon') {
+        if (this.state.type === 'dragon') {
             return {
                 margin: 10,
                 backgroundColor: '#000080',
@@ -104,7 +115,7 @@ export default function OnePokemonBloc(pokemon: { pokemon: { name: any; }; }) {
                 paddingHorizontal: 10,
             }
         }
-        if (type === 'steel') {
+        if (this.state.type === 'steel') {
             return {
                 margin: 10,
                 backgroundColor: '#a9a9a9',
@@ -112,7 +123,7 @@ export default function OnePokemonBloc(pokemon: { pokemon: { name: any; }; }) {
                 paddingHorizontal: 10,
             }
         }
-        if (type === 'water') {
+        if (this.state.type === 'water') {
             return {
                 margin: 10,
                 backgroundColor: '#ADD8E6',
@@ -120,7 +131,7 @@ export default function OnePokemonBloc(pokemon: { pokemon: { name: any; }; }) {
                 paddingHorizontal: 10,
             }
         }
-        if (type === 'bug') {
+        if (this.state.type === 'bug') {
             return {
                 margin: 10,
                 backgroundColor: '#7CFC00',
@@ -128,7 +139,7 @@ export default function OnePokemonBloc(pokemon: { pokemon: { name: any; }; }) {
                 paddingHorizontal: 10,
             }
         }
-        if (type === 'flying') {
+        if (this.state.type === 'flying') {
             return {
                 margin: 10,
                 backgroundColor: '#C0C0C0',
@@ -136,7 +147,7 @@ export default function OnePokemonBloc(pokemon: { pokemon: { name: any; }; }) {
                 paddingHorizontal: 10,
             }
         }
-        if (type === 'normal') {
+        if (this.state.type === 'normal') {
             return {
                 margin: 10,
                 backgroundColor: '#FFFFE0',
@@ -144,7 +155,7 @@ export default function OnePokemonBloc(pokemon: { pokemon: { name: any; }; }) {
                 paddingHorizontal: 10,
             }
         }
-        if (type === 'poison') {
+        if (this.state.type === 'poison') {
             return {
                 margin: 10,
                 backgroundColor: '#FF00FF',
@@ -152,7 +163,7 @@ export default function OnePokemonBloc(pokemon: { pokemon: { name: any; }; }) {
                 paddingHorizontal: 10,
             }
         }
-        if (type === 'fire') {
+        if (this.state.type === 'fire') {
             return {
                 margin: 10,
                 backgroundColor: 'orange',
@@ -160,7 +171,7 @@ export default function OnePokemonBloc(pokemon: { pokemon: { name: any; }; }) {
                 paddingHorizontal: 10,
             }
         }
-        if (type === 'electric') {
+        if (this.state.type === 'electric') {
             return {
                 margin: 10,
                 backgroundColor: 'gold',
@@ -177,48 +188,50 @@ export default function OnePokemonBloc(pokemon: { pokemon: { name: any; }; }) {
         }
     }
 
-    return (
-        <View>
-            {
-                thisPokemon ?
-                    <View style={myStyle()}>
-                        {
-                            loading === false ?
-                                    <View
-                                    style={styles.pokeCardIn}>
-                                    <Image
-                                        style={styles.pic}
-                                        source={{
-                                            uri: `${thisPokemon?.sprites?.front_default}`,
-                                        }}
-                                    />
-                                    {
-                                        type==='grass' || type==='poison' || type==='fighting' || type==='ghost' || type==='dragon'?
-                                        <View style={styles.tag}>
-                                            <Text style={styles.numberWhite}>#{thisPokemon.id}</Text>
-                                            <Text style={styles.nameWhite}>{thisPokemon?.name?.charAt(0).toUpperCase() + thisPokemon?.name?.slice(1)}</Text>
-                                        </View>:
-                                        <View style={styles.tag}>
-                                            <Text style={styles.number}>#{thisPokemon.id}</Text>
-                                            <Text style={styles.name}>{thisPokemon?.name?.charAt(0).toUpperCase() + thisPokemon?.name?.slice(1)}</Text>
+    render(){
+        return (
+            <View>
+                {
+                    this.state.thisPokemon ?
+                        <View style={this.myStyle()}>
+                            {
+                                this.state.loading === false ?
+                                        <View
+                                        style={styles.pokeCardIn}>
+                                        <Image
+                                            style={styles.pic}
+                                            source={{
+                                                uri: `${this.state.thisPokemon?.sprites?.front_default}`,
+                                            }}
+                                        />
+                                        {
+                                            this.state.type==='grass' || this.state.type==='poison' || this.state.type==='fighting' || this.state.type==='ghost' || this.state.type==='dragon'?
+                                            <View style={styles.tag}>
+                                                <Text style={styles.numberWhite}>#{this.state.thisPokemon.id}</Text>
+                                                <Text style={styles.nameWhite}>{this.state.thisPokemon?.name?.charAt(0).toUpperCase() + this.state.thisPokemon?.name?.slice(1)}</Text>
+                                            </View>:
+                                            <View style={styles.tag}>
+                                                <Text style={styles.number}>#{this.state.thisPokemon.id}</Text>
+                                                <Text style={styles.name}>{this.state.thisPokemon?.name?.charAt(0).toUpperCase() + this.state.thisPokemon?.name?.slice(1)}</Text>
+                                            </View>
+                                        }
                                         </View>
-                                    }
+                                    :
+                                    <View style={styles.gifContainer}>
+                                        <Image
+                                            style={styles.gif}
+                                            source={{
+                                                uri: `https://c.tenor.com/fSsxftCb8w0AAAAi/pikachu-running.gif`,
+                                            }}
+                                        />
                                     </View>
-                                :
-                                <View style={styles.gifContainer}>
-                                    <Image
-                                        style={styles.gif}
-                                        source={{
-                                            uri: `https://c.tenor.com/fSsxftCb8w0AAAAi/pikachu-running.gif`,
-                                        }}
-                                    />
-                                </View>
-                        }
-                    </View> : null
-            }
-        </View>
-    );
-}
+                            }
+                        </View> : null
+                }
+            </View>
+        )
+    }}
+
 
 const styles = StyleSheet.create({
     container: {
