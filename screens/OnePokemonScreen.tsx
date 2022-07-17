@@ -1,6 +1,7 @@
 import axios from 'axios'
 import React, { useState } from 'react'
-import { Image, StyleSheet, Text, View } from 'react-native'
+import { Image, SafeAreaView, StyleSheet, Text, View } from 'react-native'
+import { ScrollView } from 'react-native-gesture-handler'
 
 export default class OnePokemonScreen extends React.Component {
 
@@ -19,12 +20,10 @@ export default class OnePokemonScreen extends React.Component {
       try {
           await axios.get(`https://pokeapi.co/api/v2/pokemon/${this.props.route.params.pokemon.name}`).then(async (res) => {
               try {
-                console.log(res);
                   await axios.get(res.data.forms[0].url).then((res) => {
                       this.setState({pokemon:res.data})
                       this.setState({type:res.data?.types[0]?.type?.name})
                       this.setState({loading:false})
-                      console.log(res.data);
                   })
 
               } catch (error) {
@@ -39,164 +38,170 @@ export default class OnePokemonScreen extends React.Component {
 
   componentDidMount(){
     this.getThisPokemon()
-    // console.log(this.props.route.params.pokemon.name);
   }
 
   myStyle = () => {
-    if (type === 'grass') {
+    if (this.state.type === 'grass') {
         return {
-            margin: 10,
+            height: "100%",
             backgroundColor: 'green',
-            borderRadius: 15,
             paddingHorizontal: 10,
+            paddingVertical: 10,
         }
     }
-    if (type === 'ice') {
+    if (this.state.type === 'ice') {
         return {
-            margin: 10,
+            height: "100%",
             backgroundColor: '#48d1cc',
-            borderRadius: 15,
             paddingHorizontal: 10,
+            paddingVertical: 10,
         }
     }
-    if (type === 'fighting') {
+    if (this.state.type === 'fighting') {
         return {
-            margin: 10,
+            height: "100%",
             backgroundColor: '#8b0000',
-            borderRadius: 15,
             paddingHorizontal: 10,
+            paddingVertical: 10,
         }
     }
-    if (type === 'ground') {
+    if (this.state.type === 'ground') {
         return {
-            margin: 10,
+            height: "100%",
             backgroundColor: '#bdb76b',
-            borderRadius: 15,
             paddingHorizontal: 10,
+            paddingVertical: 10,
         }
     }
-    if (type === 'psychic') {
+    if (this.state.type === 'psychic') {
         return {
-            margin: 10,
+            height: "100%",
             backgroundColor: '#ff1493',
-            borderRadius: 15,
             paddingHorizontal: 10,
+            paddingVertical: 10,
         }
     }
-    if (type === 'rock') {
+    if (this.state.type === 'rock') {
         return {
-            margin: 10,
+            height: "100%",
             backgroundColor: '#daa520',
-            borderRadius: 15,
             paddingHorizontal: 10,
+            paddingVertical: 10,
         }
     }
-    if (type === 'ghost') {
+    if (this.state.type === 'ghost') {
         return {
-            margin: 10,
+            height: "100%",
             backgroundColor: '#4b0082',
-            borderRadius: 15,
             paddingHorizontal: 10,
+            paddingVertical: 10,
         }
     }
-    if (type === 'dark') {
+    if (this.state.type === 'dark') {
         return {
-            margin: 10,
+            height: "100%",
             backgroundColor: '#010500',
-            borderRadius: 15,
             paddingHorizontal: 10,
+            paddingVertical: 10,
         }
     }
-    if (type === 'dragon') {
+    if (this.state.type === 'dragon') {
         return {
-            margin: 10,
+            height: "100%",
             backgroundColor: '#000080',
-            borderRadius: 15,
             paddingHorizontal: 10,
+            paddingVertical: 10,
         }
     }
-    if (type === 'steel') {
+    if (this.state.type === 'steel') {
         return {
-            margin: 10,
+            height: "100%",
             backgroundColor: '#a9a9a9',
-            borderRadius: 15,
             paddingHorizontal: 10,
+            paddingVertical: 10,
         }
     }
-    if (type === 'water') {
+    if (this.state.type === 'water') {
         return {
-            margin: 10,
+            height: "100%",
             backgroundColor: '#ADD8E6',
-            borderRadius: 15,
             paddingHorizontal: 10,
+            paddingVertical: 10,
         }
     }
-    if (type === 'bug') {
+    if (this.state.type === 'bug') {
         return {
-            margin: 10,
+            height: "100%",
             backgroundColor: '#7CFC00',
-            borderRadius: 15,
             paddingHorizontal: 10,
+            paddingVertical: 10,
         }
     }
-    if (type === 'flying') {
+    if (this.state.type === 'flying') {
         return {
-            margin: 10,
+            height: "100%",
             backgroundColor: '#C0C0C0',
-            borderRadius: 15,
             paddingHorizontal: 10,
+            paddingVertical: 10,
         }
     }
-    if (type === 'normal') {
+    if (this.state.type === 'normal') {
         return {
-            margin: 10,
+            height: "100%",
             backgroundColor: '#FFFFE0',
-            borderRadius: 15,
             paddingHorizontal: 10,
+            paddingVertical: 10,
         }
     }
-    if (type === 'poison') {
+    if (this.state.type === 'poison') {
         return {
-            margin: 10,
+            height: "100%",
             backgroundColor: '#FF00FF',
-            borderRadius: 15,
             paddingHorizontal: 10,
+            paddingVertical: 10,
         }
     }
-    if (type === 'fire') {
+    if (this.state.type === 'fire') {
         return {
-            margin: 10,
             backgroundColor: 'orange',
-            borderRadius: 15,
             paddingHorizontal: 10,
+            paddingVertical: 10,
+            height: "100%"
         }
     }
-    if (type === 'electric') {
+    if (this.state.type === 'electric') {
         return {
-            margin: 10,
+            height: "100%",
             backgroundColor: 'gold',
-            borderRadius: 15,
             paddingHorizontal: 10,
+            paddingVertical: 10,
         }
-    } else {
+    }
+    if(this.state.type==='fairy'){
         return {
-            margin: 10,
+            height: "100%",
             backgroundColor: '#ffb6c1',
-            borderRadius: 15,
             paddingHorizontal: 10,
+            paddingVertical: 10,
         }
     }
 }
 
     render(){
   return (
-    <View>
+    <View style={this.myStyle()}>
         {
             this.state.pokemon?
             <View>
                 <Text>{this.state.pokemon.name}</Text>
         <Image
             style={styles.pic}
+            source={{
+                uri: `${this.state.pokemon?.sprites?.front_default}`,
+            }}
+        />
+        <Image
+            style={styles.smallPic}
             source={{
                 uri: `${this.state.pokemon?.sprites?.front_default}`,
             }}
@@ -209,9 +214,19 @@ export default class OnePokemonScreen extends React.Component {
 }
 const styles = StyleSheet.create({
     pic: {
-        width: 100,
-        height: 100,
+        width: 520,
+        height: 520,
         position: "absolute",
-        right: 10
+        right: -100,
+        top:-40,
+        opacity:0.8,
+        tintColor:'#000',
+    },
+    smallPic: {
+        width: 150,
+        height: 150,
+        position: "absolute",
+        right: 100,
+        top:300,
     },
 });

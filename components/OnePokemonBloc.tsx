@@ -11,9 +11,10 @@ export default class HomeScreen extends React.Component{
   constructor(props: any) {
     super(props)
     this.state={
-      loading: true,
-      thisPokemon: null,
-      type:0
+        loading: true,
+        thisPokemon: null,
+        type: null,
+        displayType: this.props.selectedType,
     }
   }
 
@@ -102,7 +103,7 @@ export default class HomeScreen extends React.Component{
         if (this.state.type === 'dark') {
             return {
                 margin: 10,
-                backgroundColor: '#010500',
+                backgroundColor: '#000',
                 borderRadius: 15,
                 paddingHorizontal: 10,
             }
@@ -178,7 +179,8 @@ export default class HomeScreen extends React.Component{
                 borderRadius: 15,
                 paddingHorizontal: 10,
             }
-        } else {
+        } 
+        if (this.state.type === 'fairy'){
             return {
                 margin: 10,
                 backgroundColor: '#ffb6c1',
@@ -193,6 +195,7 @@ export default class HomeScreen extends React.Component{
             <View>
                 {
                     this.state.thisPokemon ?
+                        this.state.displayType==='All'?
                         <View style={this.myStyle()}>
                             {
                                 this.state.loading === false ?
@@ -226,7 +229,43 @@ export default class HomeScreen extends React.Component{
                                         />
                                     </View>
                             }
-                        </View> : null
+                        </View>:
+                        this.state.type===this.state.displayType?
+                        <View style={this.myStyle()}>
+                            {
+                                this.state.loading === false ?
+                                        <View
+                                        style={styles.pokeCardIn}>
+                                        <Image
+                                            style={styles.pic}
+                                            source={{
+                                                uri: `${this.state.thisPokemon?.sprites?.front_default}`,
+                                            }}
+                                        />
+                                        {
+                                            this.state.type==='psychic' || this.state.type==='poison' || this.state.type==='fighting' || this.state.type==='ghost' || this.state.type==='dragon' || this.state.type==='dark'?
+                                            <View style={styles.tag}>
+                                                <Text style={styles.numberWhite}>#{this.state.thisPokemon.id}</Text>
+                                                <Text style={styles.nameWhite}>{this.state.thisPokemon?.name?.charAt(0).toUpperCase() + this.state.thisPokemon?.name?.slice(1)}</Text>
+                                            </View>:
+                                            <View style={styles.tag}>
+                                                <Text style={styles.number}>#{this.state.thisPokemon.id}</Text>
+                                                <Text style={styles.name}>{this.state.thisPokemon?.name?.charAt(0).toUpperCase() + this.state.thisPokemon?.name?.slice(1)}</Text>
+                                            </View>
+                                        }
+                                        </View>
+                                    :
+                                    <View style={styles.gifContainer}>
+                                        <Image
+                                            style={styles.gif}
+                                            source={{
+                                                uri: `https://c.tenor.com/fSsxftCb8w0AAAAi/pikachu-running.gif`,
+                                            }}
+                                        />
+                                    </View>
+                            }
+                        </View>:null
+                        : null
                 }
             </View>
         )
