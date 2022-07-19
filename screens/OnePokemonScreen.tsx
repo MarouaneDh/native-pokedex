@@ -1,21 +1,45 @@
 import axios from 'axios'
 import React, { useState } from 'react'
-import { Image, SafeAreaView, StyleSheet, Text, View } from 'react-native'
+import { Image, Animated, StyleSheet, Text, View, Easing } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 
 export default class OnePokemonScreen extends React.Component {
 
     props: any
     state: any
+    animatedSmallImage:any
+    animatedShadow:any
   
     constructor(props: any) {
       super(props)
+      this.animatedSmallImage = new Animated.Value(0)
+      this.animatedShadow = new Animated.Value(0)
       this.state={
         loading: true,
         pokemon: null,
         type: null
       }
+      
     }
+
+    handleAnimation = () => {
+        Animated.timing(this.animatedSmallImage, {
+            toValue: 1,
+            duration: 700,
+            easing: Easing.ease,
+            useNativeDriver: false
+        }).start()
+    }
+
+    handleShadowAnimation = () => {
+        Animated.timing(this.animatedShadow, {
+            toValue: 1,
+            duration: 700,
+            easing: Easing.ease,
+            useNativeDriver: false
+        }).start()
+    }
+    
     getThisPokemon = async () => {
       try {
           await axios.get(`https://pokeapi.co/api/v2/pokemon/${this.props.route.params.pokemon.name}`).then(async (res) => {
@@ -38,6 +62,8 @@ export default class OnePokemonScreen extends React.Component {
 
   componentDidMount(){
     this.getThisPokemon()
+    this.handleAnimation()
+    this.handleShadowAnimation()
   }
 
   myStyle = () => {
@@ -193,19 +219,86 @@ export default class OnePokemonScreen extends React.Component {
         {
             this.state.pokemon?
             <View>
-                <Text>{this.state.pokemon.name}</Text>
-        <Image
-            style={styles.pic}
-            source={{
-                uri: `${this.state.pokemon?.sprites?.front_default}`,
-            }}
-        />
-        <Image
-            style={styles.smallPic}
-            source={{
-                uri: `${this.state.pokemon?.sprites?.front_default}`,
-            }}
-        />
+                <Text style={styles.text}>{this.state.pokemon.name.toUpperCase()}</Text>
+            <Animated.Image
+                style={{
+                    position: 'absolute',
+                    left: 180,
+                    top: 200,
+                    height: 20,
+                    width: 20,
+                    opacity:0.8,
+                    tintColor:'#000',
+                    transform: [
+                        {
+                            translateX: this.animatedShadow.interpolate({
+                                inputRange: [0, 1],
+                                outputRange: [0, 20]
+                            })
+                        },
+                        {
+                            translateY: this.animatedShadow.interpolate({
+                                inputRange: [0, 1],
+                                outputRange: [0, -20]
+                            })
+                        },
+                        {
+                            scaleX: this.animatedShadow.interpolate({
+                                inputRange: [0, 1],
+                                outputRange: [1, 20]
+                            })
+                        },
+                        {
+                            scaleY: this.animatedShadow.interpolate({
+                                inputRange: [0, 1],
+                                outputRange: [1, 20]
+                            })
+                        }
+                    ]
+                }}
+                source={{
+                    uri: `${this.state.pokemon?.sprites?.front_default}`,
+                }}
+            />
+            <Animated.Image
+                style={{
+                    position: 'absolute',
+                    left: 180,
+                    top: 300,
+                    height: 15,
+                    width: 15,
+                    transform: [
+                        {
+                            translateX: this.animatedSmallImage.interpolate({
+                                inputRange: [0, 1],
+                                outputRange: [0, 20]
+                            })
+                        },
+                        {
+                            translateY: this.animatedSmallImage.interpolate({
+                                inputRange: [0, 1],
+                                outputRange: [0, -20]
+                            })
+                        },
+                        {
+                            scaleX: this.animatedSmallImage.interpolate({
+                                inputRange: [0, 1],
+                                outputRange: [1, 13]
+                            })
+                        },
+                        {
+                            scaleY: this.animatedSmallImage.interpolate({
+                                inputRange: [0, 1],
+                                outputRange: [1, 12.5]
+                            })
+                        }
+                    ]
+                }}
+
+                source={{
+                    uri: `${this.state.pokemon?.sprites?.front_default}`,
+                }}
+            />
             </View>:null
         }
     </View>
@@ -213,20 +306,14 @@ export default class OnePokemonScreen extends React.Component {
 }
 }
 const styles = StyleSheet.create({
-    pic: {
-        width: 520,
-        height: 520,
-        position: "absolute",
-        right: -100,
-        top:-40,
-        opacity:0.8,
-        tintColor:'#000',
-    },
-    smallPic: {
-        width: 150,
-        height: 150,
-        position: "absolute",
-        right: 100,
-        top:300,
-    },
+    text: {
+        textAlign: 'center',
+        color: '#F7FF00',
+        fontSize: 40,
+        zIndex:9,
+        textShadowColor: "blue",
+        textShadowOffset: {width: 0, height: 0},
+        textShadowRadius: 25,
+        elevation:15
+    }
 });
