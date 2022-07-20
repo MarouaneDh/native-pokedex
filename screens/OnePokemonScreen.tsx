@@ -25,7 +25,7 @@ export default class OnePokemonScreen extends React.Component {
     handleAnimation = () => {
         Animated.timing(this.animatedSmallImage, {
             toValue: 1,
-            duration: 700,
+            duration: 1000,
             easing: Easing.ease,
             useNativeDriver: false
         }).start()
@@ -34,7 +34,7 @@ export default class OnePokemonScreen extends React.Component {
     handleShadowAnimation = () => {
         Animated.timing(this.animatedShadow, {
             toValue: 1,
-            duration: 700,
+            duration: 1000,
             easing: Easing.ease,
             useNativeDriver: false
         }).start()
@@ -257,7 +257,7 @@ export default class OnePokemonScreen extends React.Component {
                     ]
                 }}
                 source={{
-                    uri: `${this.state.pokemon?.sprites?.front_default}`,
+                    uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${this.state.pokemon.id}.png`,
                 }}
             />
             <Animated.Image
@@ -296,7 +296,7 @@ export default class OnePokemonScreen extends React.Component {
                 }}
 
                 source={{
-                    uri: `${this.state.pokemon?.sprites?.front_default}`,
+                    uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${this.state.pokemon.id}.png`,
                 }}
             />
             </View>:null
