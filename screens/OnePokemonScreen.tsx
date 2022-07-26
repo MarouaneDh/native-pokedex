@@ -1,7 +1,9 @@
-import axios from 'axios'
-import React, { useState } from 'react'
+import React from 'react'
 import { Image, Animated, StyleSheet, Text, View, Easing } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
+import { getOnePokemon, getOnePokemonStats, getPokeDescription } from '../controllers/pokemonControllers';
+// import {ProgressBar} from '@react-native-community/progress-bar-android';
+
 
 export default class OnePokemonScreen extends React.Component {
 
@@ -17,7 +19,10 @@ export default class OnePokemonScreen extends React.Component {
       this.state={
         loading: true,
         pokemon: null,
-        type: null
+        type: null,
+        data: null,
+        desc: '',
+        stats: null
       }
       
     }
@@ -39,31 +44,38 @@ export default class OnePokemonScreen extends React.Component {
             useNativeDriver: false
         }).start()
     }
-    
-    getThisPokemon = async () => {
-      try {
-          await axios.get(`https://pokeapi.co/api/v2/pokemon/${this.props.route.params.pokemon.name}`).then(async (res) => {
-              try {
-                  await axios.get(res.data.forms[0].url).then((res) => {
-                      this.setState({pokemon:res.data})
-                      this.setState({type:res.data?.types[0]?.type?.name})
-                      this.setState({loading:false})
-                  })
 
-              } catch (error) {
-                  console.log(error)
-              }
-          })
+    getOnePokemon=async()=>{
+        await getOnePokemon(this.props.route.params.pokemon.name).then(async(res)=>{
+            await this.setState({data:res})
+            
+            await this.setState({type:res?.types[0]?.type?.name})
+            this.setState({loading:false})
+            // console.log('==============this.state.data===================');
+            // console.log(this.state.data);
+        })
+    }
 
-      } catch (error) {
-          console.log(error)
-      }
-  }
+    getPokemonDesc=async()=>{
+        await getPokeDescription(this.props.route.params.id).then(async(res)=>{
+            // console.log('==============this.state.data===================');
+            // console.log(this.state.data);
+            this.setState({desc:res})
+        })
+    }
+
+    getPokemonStat=async()=>{
+        await getOnePokemonStats(this.props.route.params.pokemon.name).then(async(res)=>{
+            this.setState({stats:res})
+        })
+    }
 
   componentDidMount(){
-    this.getThisPokemon()
+    this.getOnePokemon()
     this.handleAnimation()
     this.handleShadowAnimation()
+    this.getPokemonDesc()
+    this.getPokemonStat()
   }
 
   myStyle = () => {
@@ -217,9 +229,9 @@ export default class OnePokemonScreen extends React.Component {
   return (
     <View style={this.myStyle()}>
         {
-            this.state.pokemon?
+            this.state.data?
             <View>
-                <Text style={styles.text}>{this.state.pokemon.name.toUpperCase()}</Text>
+                <Text style={styles.text}>{this.state.data.name.toUpperCase()}</Text>
             <Animated.Image
                 style={{
                     position: 'absolute',
@@ -257,7 +269,7 @@ export default class OnePokemonScreen extends React.Component {
                     ]
                 }}
                 source={{
-                    uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${this.state.pokemon.id}.png`,
+                    uri: this.state.data?.sprites?.other?.home?.front_default,
                 }}
             />
             <Animated.Image
@@ -265,8 +277,8 @@ export default class OnePokemonScreen extends React.Component {
                     position: 'absolute',
                     left: 180,
                     top: 300,
-                    height: 15,
-                    width: 15,
+                    height: 20,
+                    width: 21,
                     transform: [
                         {
                             translateX: this.animatedSmallImage.interpolate({
@@ -294,11 +306,36 @@ export default class OnePokemonScreen extends React.Component {
                         }
                     ]
                 }}
-
                 source={{
-                    uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${this.state.pokemon.id}.png`,
+                    uri: this.state.data?.sprites?.other?.home?.front_default,
                 }}
             />
+            <View>
+                <Text>Height : {this.state.data.height} ft</Text>
+                <Text>Weight : {this.state.data.weight} lbs</Text>
+            </View>
+            <View>
+                <Text>Description : {this.state.desc}</Text>
+            </View>
+            <View>
+            {
+                this.state.stats ? 
+                <View>
+                    <Text>{this.state.stats[0].stat.name} : {this.state.stats[0].base_stat}</Text>
+                    <Text>{this.state.stats[1].stat.name} : {this.state.stats[1].base_stat}</Text>
+                    <Text>{this.state.stats[2].stat.name} : {this.state.stats[2].base_stat}</Text>
+                    <Text>{this.state.stats[3].stat.name} : {this.state.stats[3].base_stat}</Text>
+                    <Text>{this.state.stats[4].stat.name} : {this.state.stats[4].base_stat}</Text>
+                    <Text>{this.state.stats[5].stat.name} : {this.state.stats[5].base_stat}</Text>
+                    {/* <ProgressBar
+                    styleAttr="Horizontal"
+                    indeterminate={false}
+                    progress={0.5}
+                    /> */}
+                </View>
+                :null
+            }
+            </View>
             </View>:null
         }
     </View>

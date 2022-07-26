@@ -69,7 +69,7 @@ export default class HomeScreen extends React.Component {
                   <Pressable 
                   key={i}
                   onPress={() =>
-                    this.props.navigation.navigate('Pokemon Details', { pokemon: pokemon })
+                    this.props.navigation.navigate('Pokemon Details', { pokemon: pokemon ,id:i})
                     }
                     >
                     <OnePokemonBloc selectedType={this.state.selectedType} pokemon={pokemon} />

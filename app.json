@@ -1,4 +1,6 @@
 {
+  "name": "pokedex",
+  "displayName":"pokedex",
   "expo": {
     "name": "pokedex",
     "slug": "pokedex",
