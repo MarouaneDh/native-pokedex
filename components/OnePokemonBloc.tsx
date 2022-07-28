@@ -1,6 +1,7 @@
 import axios from 'axios';
 import * as React from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
+import { getOnePokemon } from '../controllers/pokemonControllers';
 
 
 export default class HomeScreen extends React.Component{
@@ -12,35 +13,22 @@ export default class HomeScreen extends React.Component{
     super(props)
     this.state={
         loading: true,
-        thisPokemon: null,
+        data: null,
         type: null,
         displayType: this.props.selectedType,
     }
   }
 
-    getThisPokemon = async () => {
-        try {
-            await axios.get(`https://pokeapi.co/api/v2/pokemon/${this.props.pokemon?.name}`).then(async (res) => {
-                try {
-                    await axios.get(res.data.forms[0].url).then((res) => {
-                        this.setState({thisPokemon:res.data})
-                        this.setState({type:res.data?.types[0]?.type?.name})
-                        this.setState({loading:false})
-                    })
-
-                } catch (error) {
-                    console.log(error)
-                }
-            })
-
-        } catch (error) {
-            console.log(error)
-        }
+    getOnePokemon=async()=>{
+        await getOnePokemon(this.props.pokemon?.name).then(async(res)=>{
+            await this.setState({data:res})
+            await this.setState({type:res?.types[0]?.type?.name})
+            this.setState({loading:false})
+        })
     }
 
-
     componentDidMount(){
-        this.getThisPokemon()
+        this.getOnePokemon()
     }
 
     myStyle = () => {
@@ -194,7 +182,7 @@ export default class HomeScreen extends React.Component{
         return (
             <View>
                 {
-                    this.state.thisPokemon ?
+                    this.state.data ?
                         this.state.displayType==='All'?
                         <View style={this.myStyle()}>
                             {
@@ -204,18 +192,18 @@ export default class HomeScreen extends React.Component{
                                         <Image
                                             style={styles.pic}
                                             source={{
-                                                uri: `${this.state.thisPokemon?.sprites?.front_default}`,
+                                                uri: `${this.state.data?.sprites?.front_default}`,
                                             }}
                                         />
                                         {
                                             this.state.type==='grass' || this.state.type==='poison' || this.state.type==='fighting' || this.state.type==='ghost' || this.state.type==='dragon'?
                                             <View style={styles.tag}>
-                                                <Text style={styles.numberWhite}>#{this.state.thisPokemon.id}</Text>
-                                                <Text style={styles.nameWhite}>{this.state.thisPokemon?.name?.charAt(0).toUpperCase() + this.state.thisPokemon?.name?.slice(1)}</Text>
+                                                <Text style={styles.numberWhite}>#{this.state.data.id}</Text>
+                                                <Text style={styles.nameWhite}>{this.state.data?.name?.charAt(0).toUpperCase() + this.state.data?.name?.slice(1)}</Text>
                                             </View>:
                                             <View style={styles.tag}>
-                                                <Text style={styles.number}>#{this.state.thisPokemon.id}</Text>
-                                                <Text style={styles.name}>{this.state.thisPokemon?.name?.charAt(0).toUpperCase() + this.state.thisPokemon?.name?.slice(1)}</Text>
+                                                <Text style={styles.number}>#{this.state.data.id}</Text>
+                                                <Text style={styles.name}>{this.state.data?.name?.charAt(0).toUpperCase() + this.state.data?.name?.slice(1)}</Text>
                                             </View>
                                         }
                                         </View>
@@ -239,18 +227,18 @@ export default class HomeScreen extends React.Component{
                                         <Image
                                             style={styles.pic}
                                             source={{
-                                                uri: `${this.state.thisPokemon?.sprites?.front_default}`,
+                                                uri: `${this.state.data?.sprites?.front_default}`,
                                             }}
                                         />
                                         {
                                             this.state.type==='psychic' || this.state.type==='poison' || this.state.type==='fighting' || this.state.type==='ghost' || this.state.type==='dragon' || this.state.type==='dark'?
                                             <View style={styles.tag}>
-                                                <Text style={styles.numberWhite}>#{this.state.thisPokemon.id}</Text>
-                                                <Text style={styles.nameWhite}>{this.state.thisPokemon?.name?.charAt(0).toUpperCase() + this.state.thisPokemon?.name?.slice(1)}</Text>
+                                                <Text style={styles.numberWhite}>#{this.state.data.id}</Text>
+                                                <Text style={styles.nameWhite}>{this.state.data?.name?.charAt(0).toUpperCase() + this.state.data?.name?.slice(1)}</Text>
                                             </View>:
                                             <View style={styles.tag}>
-                                                <Text style={styles.number}>#{this.state.thisPokemon.id}</Text>
-                                                <Text style={styles.name}>{this.state.thisPokemon?.name?.charAt(0).toUpperCase() + this.state.thisPokemon?.name?.slice(1)}</Text>
+                                                <Text style={styles.number}>#{this.state.data.id}</Text>
+                                                <Text style={styles.name}>{this.state.data?.name?.charAt(0).toUpperCase() + this.state.data?.name?.slice(1)}</Text>
                                             </View>
                                         }
                                         </View>
