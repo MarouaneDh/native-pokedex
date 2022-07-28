@@ -45,6 +45,7 @@ export default class OnePokemonScreen extends React.Component {
           await axios.get(`https://pokeapi.co/api/v2/pokemon/${this.props.route.params.pokemon.name}`).then(async (res) => {
               try {
                   await axios.get(res.data.forms[0].url).then((res) => {
+                    console.log(res.data);
                       this.setState({pokemon:res.data})
                       this.setState({type:res.data?.types[0]?.type?.name})
                       this.setState({loading:false})
