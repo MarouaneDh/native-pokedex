@@ -1,6 +1,5 @@
 import React from 'react'
-import { Image, Animated, StyleSheet, Text, View, Easing } from 'react-native'
-import { ScrollView } from 'react-native-gesture-handler'
+import { Animated, StyleSheet, Text, View, Easing } from 'react-native'
 import { getOnePokemon, getOnePokemonStats, getPokeDescription } from '../controllers/pokemonControllers';
 import {ProgressBar} from '@react-native-community/progress-bar-android';
 
@@ -22,9 +21,14 @@ export default class OnePokemonScreen extends React.Component {
         type: null,
         data: null,
         desc: '',
-        stats: null
+        stats: null,
+        hp: 0,
+        attack: 0,
+        speed: 0,
+        defence: 0,
+        spAttack: 0,
+        spDefence: 0,
       }
-      
     }
 
     handleAnimation = () => {
@@ -63,15 +67,33 @@ export default class OnePokemonScreen extends React.Component {
     getPokemonStat=async()=>{
         await getOnePokemonStats(this.props.route.params.pokemon.name).then(async(res)=>{
             this.setState({stats:res})
+            this.setState({
+                attack:  res[1].base_stat,
+                defence:  res[2].base_stat,
+                spAttack:  res[3].base_stat,
+                spDefence:  res[4].base_stat,
+                speed:  res[5].base_stat
+            })
         })
     }
 
-  componentDidMount(){
+    setHp=()=>{
+        let a = 0
+        while(this.state.stats[0].base_stat!==a){
+            setTimeout(() => {
+                this.setState({hp:a})
+            }, 100);
+            a++
+        }
+    }
+
+  componentDidMount=async()=>{
     this.getOnePokemon()
     this.handleAnimation()
     this.handleShadowAnimation()
     this.getPokemonDesc()
-    this.getPokemonStat()
+    await this.getPokemonStat()
+    this.setHp()
   }
 
   myStyle = () => {
@@ -323,10 +345,10 @@ export default class OnePokemonScreen extends React.Component {
                         style={styles.bar}
                         styleAttr="Horizontal"
                         indeterminate={false}
-                        progress={this.state.stats[0].base_stat/200}
+                        progress={this.state.hp/200}
                         color="#2194F3"
                         />
-                        <Text style={styles.hwText}>{this.state.stats[0].base_stat}</Text>
+                        <Text style={styles.hwText}>{this.state.hp}</Text>
                     </View>
                     <Text style={styles.statName}>{this.state.stats[1].stat.name}</Text>
                     <View style={styles.stat}>
@@ -334,10 +356,10 @@ export default class OnePokemonScreen extends React.Component {
                         style={styles.bar}
                         styleAttr="Horizontal"
                         indeterminate={false}
-                        progress={this.state.stats[1].base_stat/200}
+                        progress={this.state.attack/200}
                         color="red"
                         />
-                        <Text style={styles.hwText}>{this.state.stats[1].base_stat}</Text>
+                        <Text style={styles.hwText}>{this.state.attack}</Text>
                     </View>
                     <Text style={styles.statName}>{this.state.stats[2].stat.name}</Text>
                     <View style={styles.stat}>
@@ -345,10 +367,10 @@ export default class OnePokemonScreen extends React.Component {
                         style={styles.bar}
                         styleAttr="Horizontal"
                         indeterminate={false}
-                        progress={this.state.stats[2].base_stat/200}
+                        progress={this.state.defence/200}
                         color="#fff"
                         />
-                        <Text style={styles.hwText}>{this.state.stats[2].base_stat}</Text>
+                        <Text style={styles.hwText}>{this.state.defence}</Text>
                     </View>
                     <Text style={styles.statName}>{this.state.stats[3].stat.name}</Text>
                     <View style={styles.stat}>
@@ -356,10 +378,10 @@ export default class OnePokemonScreen extends React.Component {
                         style={styles.bar}
                         styleAttr="Horizontal"
                         indeterminate={false}
-                        progress={this.state.stats[3].base_stat/200}
+                        progress={this.state.spAttack/200}
                         color="#FF00FF"
                         />
-                        <Text style={styles.hwText}>{this.state.stats[3].base_stat}</Text>
+                        <Text style={styles.hwText}>{this.state.spAttack}</Text>
                     </View>
                     <Text style={styles.statName}>{this.state.stats[4].stat.name}</Text>
                     <View style={styles.stat}>
@@ -367,10 +389,10 @@ export default class OnePokemonScreen extends React.Component {
                         style={styles.bar}
                         styleAttr="Horizontal"
                         indeterminate={false}
-                        progress={this.state.stats[4].base_stat/200}
+                        progress={this.state.spDefence/200}
                         color="#ff1493"
                         />
-                        <Text style={styles.hwText}>{this.state.stats[4].base_stat}</Text>
+                        <Text style={styles.hwText}>{this.state.spDefence}</Text>
                     </View>
                     <Text style={styles.statName}>{this.state.stats[5].stat.name}</Text>
                     <View style={styles.stat}>
@@ -378,10 +400,10 @@ export default class OnePokemonScreen extends React.Component {
                         style={styles.bar}
                         styleAttr="Horizontal"
                         indeterminate={false}
-                        progress={this.state.stats[5].base_stat/200}
+                        progress={this.state.speed/200}
                         color="#ADD8E6"
                         />
-                        <Text style={styles.hwText}>{this.state.stats[5].base_stat}</Text>
+                        <Text style={styles.hwText}>{this.state.speed}</Text>
                     </View>
                 </View>
                 :null
@@ -413,7 +435,7 @@ const styles = StyleSheet.create({
         justifyContent:'space-between'
     },
     hwText:{
-        fontSize: 15,
+        fontSize: 14,
         fontWeight: 'bold',
         backgroundColor: "black",
         color: 'white',
@@ -428,12 +450,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     stats:{
-        padding: 20,
+        padding: 10,
         position: 'absolute',
         top: 320
     },
     statName:{
-        fontSize: 18,
+        fontSize: 14,
         backgroundColor: 'black',
         color: 'white',
         width: 170,
