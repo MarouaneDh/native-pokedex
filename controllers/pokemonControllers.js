@@ -18,6 +18,15 @@ export const getOnePokemon = async (name) =>  {
   }
 };
 
+export const getPokemonAbilities = async (name) =>  {
+  try {
+    let a = await axios.get(`https://pokeapi.co/api/v2/pokemon/${name}`)
+    return a.data
+  } catch (error) {
+    console.log(error)
+  }
+};
+
 export const getPokeDescription = async (id) =>  {
   try {
     let a = await axios.get(`https://pokeapi.co/api/v2/characteristic/${id}`)

@@ -2,7 +2,9 @@ import React from 'react'
 import { Animated, StyleSheet, Text, View, Easing } from 'react-native'
 import { getOnePokemon, getOnePokemonStats, getPokeDescription } from '../controllers/pokemonControllers';
 import {ProgressBar} from '@react-native-community/progress-bar-android';
+import BottomDrawer from 'react-native-bottom-drawer-view';
 
+const TAB_BAR_HEIGHT = 50;
 
 export default class OnePokemonScreen extends React.Component {
 
@@ -28,6 +30,10 @@ export default class OnePokemonScreen extends React.Component {
         defence: 0,
         spAttack: 0,
         spDefence: 0,
+        allStats: null,
+        bigStat: 0,
+        characterId: 1,
+        pokeAbilities: null
       }
     }
 
@@ -52,14 +58,13 @@ export default class OnePokemonScreen extends React.Component {
     getOnePokemon=async()=>{
         await getOnePokemon(this.props.route.params.pokemon.name).then(async(res)=>{
             await this.setState({data:res})
-            
             await this.setState({type:res?.types[0]?.type?.name})
             this.setState({loading:false})
         })
     }
 
-    getPokemonDesc=async()=>{
-        await getPokeDescription(this.props.route.params.id).then(async(res)=>{
+    getPokemonDesc=async(id)=>{
+        await getPokeDescription(id).then(async(res)=>{
             this.setState({desc:res})
         })
     }
@@ -68,32 +73,33 @@ export default class OnePokemonScreen extends React.Component {
         await getOnePokemonStats(this.props.route.params.pokemon.name).then(async(res)=>{
             this.setState({stats:res})
             this.setState({
+                hp:  res[0].base_stat,
                 attack:  res[1].base_stat,
                 defence:  res[2].base_stat,
                 spAttack:  res[3].base_stat,
                 spDefence:  res[4].base_stat,
-                speed:  res[5].base_stat
+                speed:  res[5].base_stat,
+                allStats: [res[0].base_stat,res[1].base_stat,res[2].base_stat,res[3].base_stat,res[4].base_stat,res[5].base_stat]
             })
+            this.setCharacterId(this.state.allStats)
         })
     }
 
-    setHp=()=>{
-        let a = 0
-        while(this.state.stats[0].base_stat!==a){
-            setTimeout(() => {
-                this.setState({hp:a})
-            }, 100);
-            a++
-        }
+    setCharacterId=async (stats)=>{
+        stats.map((stat)=>{
+            if(stat>this.state.bigStat){
+                this.setState({bigStat:stat})
+            }
+        })
+        this.setState({characterId:(this.state.bigStat % 5)+1})
+        await this.getPokemonDesc(this.state.characterId)
     }
 
-  componentDidMount=async()=>{
+  componentDidMount=()=>{
     this.getOnePokemon()
     this.handleAnimation()
     this.handleShadowAnimation()
-    this.getPokemonDesc()
-    await this.getPokemonStat()
-    this.setHp()
+    this.getPokemonStat()
   }
 
   myStyle = () => {
@@ -243,6 +249,86 @@ export default class OnePokemonScreen extends React.Component {
     }
 }
 
+    renderContent = () => {
+        return (
+            <View style={styles.indrawer}>
+            {
+                this.state.stats ? 
+                <View style={styles.stats}>
+                    <View style={styles.drag}></View>
+                    <Text style={styles.statName}>{this.state.stats[0].stat.name}</Text>
+                    <View style={styles.stat}>
+                        <ProgressBar
+                        style={styles.bar}
+                        styleAttr="Horizontal"
+                        indeterminate={false}
+                        progress={this.state.hp/200}
+                        color="#2194F3"
+                        />
+                        <Text style={styles.hwText}>{this.state.hp}</Text>
+                    </View>
+                    <Text style={styles.statName}>{this.state.stats[1].stat.name}</Text>
+                    <View style={styles.stat}>
+                        <ProgressBar
+                        style={styles.bar}
+                        styleAttr="Horizontal"
+                        indeterminate={false}
+                        progress={this.state.attack/200}
+                        color="red"
+                        />
+                        <Text style={styles.hwText}>{this.state.attack}</Text>
+                    </View>
+                    <Text style={styles.statName}>{this.state.stats[2].stat.name}</Text>
+                    <View style={styles.stat}>
+                        <ProgressBar
+                        style={styles.bar}
+                        styleAttr="Horizontal"
+                        indeterminate={false}
+                        progress={this.state.defence/200}
+                        color="green"
+                        />
+                        <Text style={styles.hwText}>{this.state.defence}</Text>
+                    </View>
+                    <Text style={styles.statName}>{this.state.stats[3].stat.name}</Text>
+                    <View style={styles.stat}>
+                        <ProgressBar
+                        style={styles.bar}
+                        styleAttr="Horizontal"
+                        indeterminate={false}
+                        progress={this.state.spAttack/200}
+                        color="#FF00FF"
+                        />
+                        <Text style={styles.hwText}>{this.state.spAttack}</Text>
+                    </View>
+                    <Text style={styles.statName}>{this.state.stats[4].stat.name}</Text>
+                    <View style={styles.stat}>
+                        <ProgressBar
+                        style={styles.bar}
+                        styleAttr="Horizontal"
+                        indeterminate={false}
+                        progress={this.state.spDefence/200}
+                        color="orange"
+                        />
+                        <Text style={styles.hwText}>{this.state.spDefence}</Text>
+                    </View>
+                    <Text style={styles.statName}>{this.state.stats[5].stat.name}</Text>
+                    <View style={styles.stat}>
+                        <ProgressBar
+                        style={styles.bar}
+                        styleAttr="Horizontal"
+                        indeterminate={false}
+                        progress={this.state.speed/200}
+                        color="#ADD8E6"
+                        />
+                        <Text style={styles.hwText}>{this.state.speed}</Text>
+                    </View>
+                </View>
+                :null
+            }
+            </View>
+        )
+    }
+
     render(){
   return (
     <View style={this.myStyle()}>
@@ -253,8 +339,8 @@ export default class OnePokemonScreen extends React.Component {
             <Animated.Image
                 style={{
                     position: 'absolute',
-                    left: 180,
-                    top: 200,
+                    left: 160,
+                    top: 300,
                     height: 20,
                     width: 20,
                     opacity:0.8,
@@ -294,7 +380,7 @@ export default class OnePokemonScreen extends React.Component {
                 style={{
                     position: 'absolute',
                     left: 180,
-                    top: 300,
+                    top: 400,
                     height: 20,
                     width: 21,
                     transform: [
@@ -333,82 +419,29 @@ export default class OnePokemonScreen extends React.Component {
                 <Text style={styles.hwText}>Weight : {this.state.data.weight} lbs</Text>
             </View>
             {/* <View>
-                <Text>Description : {this.state.desc}</Text>
+                {this.state.desc?<Text>Description : {this.props.route.params.pokemon.name} {this.state.desc}</Text>:null}
             </View> */}
-            <View>
-            {
-                this.state.stats ? 
-                <View style={styles.stats}>
-                    <Text style={styles.statName}>{this.state.stats[0].stat.name}</Text>
-                    <View style={styles.stat}>
-                        <ProgressBar
-                        style={styles.bar}
-                        styleAttr="Horizontal"
-                        indeterminate={false}
-                        progress={this.state.hp/200}
-                        color="#2194F3"
-                        />
-                        <Text style={styles.hwText}>{this.state.hp}</Text>
-                    </View>
-                    <Text style={styles.statName}>{this.state.stats[1].stat.name}</Text>
-                    <View style={styles.stat}>
-                        <ProgressBar
-                        style={styles.bar}
-                        styleAttr="Horizontal"
-                        indeterminate={false}
-                        progress={this.state.attack/200}
-                        color="red"
-                        />
-                        <Text style={styles.hwText}>{this.state.attack}</Text>
-                    </View>
-                    <Text style={styles.statName}>{this.state.stats[2].stat.name}</Text>
-                    <View style={styles.stat}>
-                        <ProgressBar
-                        style={styles.bar}
-                        styleAttr="Horizontal"
-                        indeterminate={false}
-                        progress={this.state.defence/200}
-                        color="#fff"
-                        />
-                        <Text style={styles.hwText}>{this.state.defence}</Text>
-                    </View>
-                    <Text style={styles.statName}>{this.state.stats[3].stat.name}</Text>
-                    <View style={styles.stat}>
-                        <ProgressBar
-                        style={styles.bar}
-                        styleAttr="Horizontal"
-                        indeterminate={false}
-                        progress={this.state.spAttack/200}
-                        color="#FF00FF"
-                        />
-                        <Text style={styles.hwText}>{this.state.spAttack}</Text>
-                    </View>
-                    <Text style={styles.statName}>{this.state.stats[4].stat.name}</Text>
-                    <View style={styles.stat}>
-                        <ProgressBar
-                        style={styles.bar}
-                        styleAttr="Horizontal"
-                        indeterminate={false}
-                        progress={this.state.spDefence/200}
-                        color="#ff1493"
-                        />
-                        <Text style={styles.hwText}>{this.state.spDefence}</Text>
-                    </View>
-                    <Text style={styles.statName}>{this.state.stats[5].stat.name}</Text>
-                    <View style={styles.stat}>
-                        <ProgressBar
-                        style={styles.bar}
-                        styleAttr="Horizontal"
-                        indeterminate={false}
-                        progress={this.state.speed/200}
-                        color="#ADD8E6"
-                        />
-                        <Text style={styles.hwText}>{this.state.speed}</Text>
-                    </View>
+            <View style={styles.abilitiesContainer}>
+                <Text style={styles.abilitiesTitle}>{this.props.route.params.pokemon.name}'s abilities</Text>
+                <View style={styles.abilities}>
+                    <Text style={styles.ability}>{this.state.data.abilities[0].ability.name}</Text>
+                    <Text style={styles.ability}>{this.state.data.abilities[1].ability.name}</Text>
                 </View>
-                :null
-            }
             </View>
+            <View>
+            </View>
+                <View style={styles.drawer}>
+                    <BottomDrawer
+                        containerHeight={500}
+                        backgroundColor="#000"
+                        downDisplay={350}
+                        shadow={true}
+                        startUp={false}
+                        offset={TAB_BAR_HEIGHT}
+                    >
+                        {this.renderContent()}
+                    </BottomDrawer>
+                </View>
             </View>:null
         }
     </View>
@@ -424,7 +457,9 @@ const styles = StyleSheet.create({
         textShadowColor: "blue",
         textShadowOffset: {width: 0, height: 0},
         textShadowRadius: 25,
-        elevation:15
+        elevation:15,
+        marginTop: 20,
+        marginBottom: 10
     },
     bar:{
         width:300
@@ -439,9 +474,50 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         backgroundColor: "black",
         color: 'white',
-        padding: 3,
+        padding: 5,
         borderRadius: 10,
         marginLeft: 10
+    },
+    abilitiesContainer:{
+        position: 'absolute',
+        top: 530,
+        left: '8%'
+    },
+    abilitiesTitle:{
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginBottom: 40,
+        marginTop: 10
+    },
+    abilities:{
+        display: 'flex',
+        justifyContent: 'space-around',
+        alignItems:'center',
+        flexDirection: 'row',
+    },
+    ability:{
+        backgroundColor: 'silver',
+        width: 170,
+        padding: 15,
+        textAlign: 'center',
+        borderRadius: 15,
+        elevation: 20,
+        fontWeight: 'bold',
+        marginRight: 50
+    },
+    drawer:{
+        left:-10.5,
+    },
+    indrawer:{
+        padding:20,
+    },
+    drag:{
+        width: 50,
+        height: 6,
+        backgroundColor: 'gray',
+        position: 'absolute',
+        borderRadius:10,
+        left: '52%'
     },
     stat:{
         display: 'flex',
@@ -450,9 +526,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     stats:{
-        padding: 10,
+        padding: 50,
         position: 'absolute',
-        top: 320
+        top: 20,
     },
     statName:{
         fontSize: 14,
