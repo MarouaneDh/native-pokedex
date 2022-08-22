@@ -45,5 +45,14 @@ export const getOnePokemonStats = async (name) =>  {
   }
 };
 
+export const getAttackDef = async (url) =>  {
+  try {
+    let a = await axios.get(url)
+    return a.data
+  } catch (error) {
+    console.log(error)
+  }
+};
+
 
 //https://pokeapi.co/api/v2/characteristic/

@@ -4,6 +4,7 @@ import HomeScreen from './screens/HomeScreen'
 import OnePokemonScreen from "./screens/OnePokemonScreen";
 import SplashScreen from "./screens/SplashScreen";
 import * as React from 'react';
+import { StatusBar } from "react-native";
 
 const Stack = createStackNavigator();
 
@@ -12,6 +13,10 @@ export default class App extends React.Component  {
   render() {
     return(
       <NavigationContainer>
+         <StatusBar
+        animated={true}
+        backgroundColor="#000"
+        />
       <Stack.Navigator>
         <Stack.Screen 
           options={{

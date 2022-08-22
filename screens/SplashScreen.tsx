@@ -31,7 +31,6 @@ export default class HomeScreen extends React.Component {
                 });
             }
             // when loaded successfully
-            // console.log('duration in seconds: ' + whoosh.getDuration() + 'number of channels: ' + whoosh.getNumberOfChannels());
           });
           
     }
