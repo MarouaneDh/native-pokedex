@@ -137,8 +137,17 @@ def reactNativeArchitectures() {
 
 android {
     ndkVersion rootProject.ext.ndkVersion
+    lintOptions {
+        abortOnError false
+        checkReleaseBuilds false
+    }
 
     compileSdkVersion rootProject.ext.compileSdkVersion
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 
     defaultConfig {
         applicationId 'com.bashkoutou.pokedex'
@@ -229,6 +238,14 @@ android {
         }
     }
     signingConfigs {
+         release {
+            if (project.hasProperty('MYAPP_UPLOAD_STORE_FILE')){
+                    storeFile file(MYAPP_UPLOAD_STORE_FILE)
+                    storePassword MYAPP_UPLOAD_STORE_PASSWORD
+                    keyAlias MYAPP_UPLOAD_KEY_ALIAS
+                    keyPassword MYAPP_UPLOAD_KEY_PASSWORD
+                }
+            }
         debug {
             storeFile file('debug.keystore')
             storePassword 'android'
@@ -243,11 +260,26 @@ android {
         release {
             // Caution! In production, you need to generate your own keystore file.
             // see https://reactnative.dev/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
+            minifyEnabled true
             minifyEnabled enableProguardInReleaseBuilds
+            signingConfig signingConfigs.release
+            debuggable false
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
+
+    buildscript {
+       repositories {
+           jcenter()
+           google()
+       }
+       dependencies {
+           classpath 'com.android.tools.build:gradle:3.0.1'
+
+           // NOTE: Do not place your application dependencies here; they belong
+           // in the individual module build.gradle files
+       }
+   }
     namespace 'com.bashkoutou.pokedex'
 
     // applicationVariants are e.g. debug, release
@@ -288,7 +320,7 @@ android {
 
 dependencies {
     implementation 'com.facebook.fresco:fresco:2.0.0'
-implementation 'com.facebook.fresco:animated-gif:2.0.0'
+    implementation 'com.facebook.fresco:animated-gif:2.0.0'
     implementation fileTree(dir: "libs", include: ["*.jar"])
 
     //noinspection GradleDynamicVersion
